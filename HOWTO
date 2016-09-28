@@ -1,0 +1,52 @@
+
+# 1) Setup the soft links to the analysis scripts, collect_energies.py  energy-decomposition.py  process-energies-frames.py
+# 2) Setup the soft links to the simulation to analyse SYSTEM.top, SYSTEM.crd, TRAJ.dcd
+# 3) First load sire because we need a python that has mdtraj installed
+module load sire/dev
+# 4) Run this script to parallelize the trajectory analysis. 
+# The syntax below indicates that:
+# - we will compute the interaction energy of residue 1 (first residue in the topology). 
+# - There will 10 jobs 
+# - The jobs will run on a queue (hardcoded inside the script to be the slurm serial queue of section6)
+# - Only the first 100 frames will be considered
+# - The analysis will skip every other framee (so will do 0,2,4,6,8,10,...,98 we count from 0) 
+python process-energies-frames.py 1 10 queue 100 2
+# 5) If you wish to analyse all frames in the trajectory, using 10 serial jobs, without skipping any then just type
+python process-energies-frames.py 1 10 queue
+# The more jobs you use, the fewer frames per job, the faster the analysis will complete. 
+# The above script automatically submit multiple instances of the script energy-decomposition.py , each via a separate job
+# 6) When all jobs have completed the results will be stored in python pickles in the folder 'energies-X' where X is the residue number
+# Assuming we analysed residue 1, the data is collected by running 
+python collect_energies.py energies-1
+# Running this script will write to the standard output a table
+
+      #InternalEnergy
+      #*************
+      1	 Ternal	    1.91	+-	2.57                   
+ ---> This is the average internal energy of the residue and the standard deviation. 
+      The data comes from the distribution of chunks files in the energies folder. 
+
+      #*************
+      #Solvent Energy	    CLJ				    Coulomb			    LJ
+      #*************
+      1	  Solvent	  -17.78	+-	0.80	   -8.32	+-	0.58	   -9.46	+-	0.22
+----> This is the average/dev residue-solvent interaction energy. It is also split into coulombic and Lennard-Jones terms
+      #*************
+      #Intramolecularenergies	    CLJ				    Coulomb			    LJ
+      1	         2		    0.00	+-	0.00	    0.00	+-	0.00	    0.00	+-	0.00
+----> This is the average interaction energy between residues 1 and 2. They are listed in the intramolecular energies section
+      because the code thinks they are in the same molecule. 
+      (...)
+      #*************
+      1	Intra	  -35.96	+-	0.56
+      #*************
+----> This is the sum of the residue-residue intramolecular interaction energies. So in total residue 1 has an intramolecular interaction energy 
+      of -35.96 kcal/mol 
+      #Intermolecularenergies	    CLJ				    Coulomb			    LJ
+      1	      289		    0.00	+-	0.00	    0.00	+-	0.00	    0.00	+-	0.00
+----> This is the average interaction energy between residues 1 and 289. They are listed in the 'intermolecular energies' section
+      because the code thinks they are in different molecules
+      #*************
+      1	Inter	    0.00	+-	0.00
+      #*************
+----> This is the sum of the residue-residue intermolecular interaction energies
