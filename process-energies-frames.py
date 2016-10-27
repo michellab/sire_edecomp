@@ -99,10 +99,15 @@ if __name__ == "__main__":
 
 source /etc/profile.d/module.sh
 module load openmm/6.3
-module load cuda/7.0
-module load sire/dev
+module load cuda/7.5
+module load sire/16.1.0_no_avx
 
 export OMP_NUM_THREADS=1
+
+# Sleep a random value between 1s to 10 minutes
+RAND=$((1 + RANDOM %% 600))
+echo 'sleep for ' $RAND
+sleep $RAND
 date
 python energy-decomposition.py %s %s %s %s %s %s %s
 date
