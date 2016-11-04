@@ -1,0 +1,5 @@
+energy_decomposition.py edited to create a folder to put all data - for each dict key which is associated with a residue interaction, it saves a file with "residue_*key*". 
+
+- to do next: get this to work with process-energies-frames.py
+
+
