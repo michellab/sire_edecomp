@@ -2,7 +2,9 @@
 # 1) Setup the soft links to the analysis scripts, collect_energies.py  energy-decomposition.py  process-energies-frames.py
 # 2) Setup the soft links to the simulation to analyse SYSTEM.top, SYSTEM.crd, TRAJ.dcd
 # 3) First load sire because we need a python that has mdtraj installed
-module load sire/dev
+
+$ module load sire/dev
+
 # 4) Run this script to parallelize the trajectory analysis. 
 # The syntax below indicates that:
 # - we will compute the interaction energy of residue 1 (first residue in the topology). 
@@ -10,14 +12,18 @@ module load sire/dev
 # - The jobs will run on a queue (hardcoded inside the script to be the slurm serial queue of section6)
 # - Only the first 100 frames will be considered
 # - The analysis will skip every other framee (so will do 0,2,4,6,8,10,...,98 we count from 0) 
-python process-energies-frames.py 1 10 queue 100 2
+
+$ python process-energies-frames.py 1 10 queue 100 2
+
 # 5) If you wish to analyse all frames in the trajectory, using 10 serial jobs, without skipping any then just type
 python process-energies-frames.py 1 10 queue
 # The more jobs you use, the fewer frames per job, the faster the analysis will complete. 
 # The above script automatically submit multiple instances of the script energy-decomposition.py , each via a separate job
 # 6) When all jobs have completed the results will be stored in python pickles in the folder 'energies-X' where X is the residue number
 # Assuming we analysed residue 1, the data is collected by running 
-python collect_energies.py energies-1
+
+$ python collect_energies.py energies-1
+
 # Running this script will write to the standard output a table
 
       #InternalEnergy

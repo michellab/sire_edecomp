@@ -35,7 +35,6 @@ from Sire.ID import *
 from Sire.Config import *
 
 import os, sys, pickle
-import numpy as np
 
 #from MDAnalysis import Universe
 
@@ -106,8 +105,6 @@ def setupForcefields(system, space, iresnum, imolnum):
 
     # Dictionary to store interaction energies of ires with everything else
     energiesDict = {}
-   
-   # import pdb ; pdb.set_trace()
 
     for molnum in molnums:
         mol = molecules.at(molnum).molecule()
@@ -148,18 +145,17 @@ def setupForcefields(system, space, iresnum, imolnum):
 
     # First the ires and solvent ffs
 
-# LP - added empty list to each key to append energies at each timestep 
     # ires InternalFF
     ires_internalff = InternalFF("ires_internalff")
     ires_internalff.add( iresgrp )
     system.add( ires_internalff )
-    energiesDict["E_{ires_internalff}^{internal}"] = [ 0.0, 0, [] ]
+    energiesDict["E_{ires_internalff}^{internal}"] = [ 0.0, 0]
 
     # ires IntraMolecularCLJ
     ires_intraff = IntraCLJFF("ires_intraff")
     ires_intraff.add( iresgrp )
     system.add( ires_intraff )
-    energiesDict["E_{ires_intraff}^{CLJ}"] = [ 0.0, 0, [] ]
+    energiesDict["E_{ires_intraff}^{CLJ}"] = [ 0.0, 0]
 
     # ires - solvent
     ires_solventff = InterGroupCLJFF("ires:solvent")
@@ -168,9 +164,9 @@ def setupForcefields(system, space, iresnum, imolnum):
     system.add( ires_solventff )
 
 
-    energiesDict["E_{ires:solvent}^{coulomb}"] = [0.0, 0, []]
-    energiesDict["E_{ires:solvent}^{LJ}"] = [0.0, 0, []]    
-    energiesDict["E_{ires:solvent}^{CLJ}"] = [0.0, 0, []]
+    energiesDict["E_{ires:solvent}^{coulomb}"] = [0.0, 0]
+    energiesDict["E_{ires:solvent}^{LJ}"] = [0.0, 0]    
+    energiesDict["E_{ires:solvent}^{CLJ}"] = [0.0, 0]
 
     total_nrg = ires_internalff.components().total() + ires_intraff.components().total() +\
         ires_solventff.components().total()
@@ -187,9 +183,9 @@ def setupForcefields(system, space, iresnum, imolnum):
         ires_jres_intraff.add( iresgrp, MGIdx(0) )
         ires_jres_intraff.add( grp, MGIdx(1) )
         system.add( ires_jres_intraff )
-        energiesDict["E_{intra_ires:%s}^{LJ}" % grpname] = [ 0.0, 0, []]
-        energiesDict["E_{intra_ires:%s}^{coulomb}" % grpname] = [0.0, 0, []]   
-        energiesDict["E_{intra_ires:%s}^{CLJ}" % grpname] = [0.0, 0, []]   
+        energiesDict["E_{intra_ires:%s}^{LJ}" % grpname] = [ 0.0, 0]
+        energiesDict["E_{intra_ires:%s}^{coulomb}" % grpname] = [0.0, 0]   
+        energiesDict["E_{intra_ires:%s}^{CLJ}" % grpname] = [0.0, 0]   
         total_nrg += ires_jres_intraff.components().total()
 
     # Then the intergroup forcefields
@@ -201,9 +197,9 @@ def setupForcefields(system, space, iresnum, imolnum):
         ires_jres_interff.add( iresgrp, MGIdx(0) )
         ires_jres_interff.add( grp, MGIdx(1) )
         system.add( ires_jres_interff )
-        energiesDict["E_{inter_ires:%s}^{LJ}" % grpname] = [0.0, 0, []]
-        energiesDict["E_{inter_ires:%s}^{coulomb}" % grpname] = [ 0.0, 0, []]
-        energiesDict["E_{inter_ires:%s}^{CLJ}" % grpname] = [ 0.0, 0, []]
+        energiesDict["E_{inter_ires:%s}^{LJ}" % grpname] = [0.0, 0]
+        energiesDict["E_{inter_ires:%s}^{coulomb}" % grpname] = [ 0.0, 0]
+        energiesDict["E_{inter_ires:%s}^{CLJ}" % grpname] = [ 0.0, 0]
         total_nrg += ires_jres_interff.components().total()
 
     system.setProperty( "space", space )
@@ -326,44 +322,23 @@ if __name__ == "__main__":
         system = updateSystemfromTraj(system, frames_xyz, cell_lengths, cell_angles)
         # Compute energy
         system.energy()
+        #import pdb ; pdb.set_trace()
         #print system.energy()
-
-# LP: note: energy_components is the keys from energiesDict: energy_components = energiesDict.keys()
-        
         # ...Accumulate results
         for component in energy_components:
-        # above is "for key in keys"
             if component == "intraresidues" or component == "interresidues":
                 continue
             nrg = system.energy( Symbol( component ) ).value()
-            # LP append energy computed to the empty list which item [2] in each key
-            energiesDict[component][2].append(nrg) 
-            # print component, nrg
+            #print component, nrg
+            import pdb ; pdb.set_trace()
             energiesDict[component][1] += 1
             energiesDict[component][0] =  energiesDict[component][0] + \
                 ( ( nrg -  energiesDict[component][0] )  /   energiesDict[component][1] )
         current_frame += step_frame
-        mdtraj_trajfile.seek(current_frame)	
-        
-# LP make a folder for file for each residue containing data from each key's list 
-    distribution_outdir = "all_data_residue_%s" % residue_number
-    if not os.path.exists(distribution_outdir):
-        cmd = "mkdir -p %s" % distribution_outdir
-        os.system(cmd)
-    
-    os.chdir(distribution_outdir)
+        mdtraj_trajfile.seek(current_frame)
 
-    for key, value in energiesDict.items():
-         if key == "interresidues" or key == "intraresidues":
-             continue 
-         else: 
-              print (key , value[2])
-              dist_out = open("residue_key_%s" % (key), 'w') 
-              for item in value[2]:
-                  dist_out.write (str(item) + '\n') 
-              dist_out.close()
-
-    os.chdir('..')
+    #print chunk_start
+    #print chunk_end
 
     # Dump energies in output folder
     outpath = os.path.join(outdir,"chunk-%s-to-%s" % (start_frame, end_frame) )
