@@ -344,27 +344,27 @@ if __name__ == "__main__":
                 ( ( nrg -  energiesDict[component][0] )  /   energiesDict[component][1] )
         current_frame += step_frame
         mdtraj_trajfile.seek(current_frame)	
-        
-# LP make a folder for file for each residue containing data from each key's list 
-    distribution_outdir = "all_data_residue_%s" % residue_number
-    if not os.path.exists(distribution_outdir):
-        cmd = "mkdir -p %s" % distribution_outdir
-        os.system(cmd)
-    
-    os.chdir(distribution_outdir)
-   
-    for key, value in energiesDict.items():
-         if key == "interresidues" or key == "intraresidues":
-             continue 
-         else: 
-              print (key , value[2])
-              filename = re.sub('[^0-9]', '', key)
-              dist_out = open("residue_%s" % (filename), 'w') 
-              for item in value[2]:
-                  dist_out.write (str(item) + '\n') 
-              dist_out.close()
 
-    os.chdir('..')
+# Below now included in collect_lists_only.py or collect_energies.py        
+#    distribution_outdir = "all_data_residue_%s" % residue_number
+#    if not os.path.exists(distribution_outdir):
+#        cmd = "mkdir -p %s" % distribution_outdir
+#        os.system(cmd)
+    
+#    os.chdir(distribution_outdir)
+   
+#    for key, value in energiesDict.items():
+#         if key == "interresidues" or key == "intraresidues":
+#             continue 
+#         else: 
+#              print (key , value[2])
+#              filename = re.sub('[^0-9]', '', key)
+#              dist_out = open("residue_%s" % (filename), 'w') 
+#              for item in value[2]:
+#                  dist_out.write (str(item) + '\n') 
+#              dist_out.close()
+
+#    os.chdir('..')
     
     # Dump energies in output folder
     outpath = os.path.join(outdir,"chunk-%s-to-%s" % (start_frame, end_frame) )
