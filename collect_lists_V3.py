@@ -25,7 +25,7 @@ if __name__ == "__main__":
     stream.close()
 
     number_of_chunks = len(files)
-    print (number_of_chunks)
+#    print (number_of_chunks)
 
     # Make sure files are ordered by chunks
     for f in files[1:]:
@@ -41,7 +41,8 @@ if __name__ == "__main__":
                 energiesDict[key].append(v)
     
     residue_number = infolder.split("-")[1].strip("/")    
-    # make folder for residue data to be stored
+ 
+   # make folder for residue data to be stored
     distribution_outdir = "all_data_residue_%s" % residue_number
     if not os.path.exists(distribution_outdir):
         cmd = "mkdir -p %s" % distribution_outdir
@@ -67,7 +68,7 @@ if __name__ == "__main__":
             while (n < len (some_list)):
                 new_joined_list.append(value[some_list[n]])
                 n = n + 1
-            
+            new_joined_list = [j for i in new_joined_list for j in i]    
             filename = re.sub('[^0-9]', '', key)
             dist_out = open("residue_%s" % (filename), 'w')
             for item in new_joined_list:
