@@ -1,4 +1,4 @@
 Running process-energies-frames.py now works with energy-decomposition.py
 collect-energies.py doesn't work anymore as some error due to the dictionary containing a list: will work on this next. 
-Instead, can use collect_lists_V2.py (run as before $ collect_lists_V2.py energies-x) which will create folder "all_data_residue_X" which contains a file with each residue energy at each step. 
+Instead, can use collect_lists_V3.py (run as before $ collect_lists_V3.py energies-x) which will create folder "all_data_residue_X" which contains a file with each residue energy at each step. 
 
