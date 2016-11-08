@@ -54,10 +54,11 @@ if __name__ == "__main__":
         if key == "interresidues" or key == "intraresidues":
             continue
         else:
-            joined_lists = (key, value[2]+value[5])  # +value[8]+value[11]+value[14]+value[17]+value[20]+value[23]+value[26]+value[29])
+            joined_lists = (value[2]+value[5])  # +value[8]+value[11]+value[14]+value[17]+value[20]+value[23]+value[26]+value[29])
             filename = re.sub('[^0-9]', '', key)
             dist_out = open("residue_%s" % (filename), 'w')
             for item in joined_lists:
                 dist_out.write (str(item) + '\n')
             dist_out.close()
+    
     os.chdir('..')
