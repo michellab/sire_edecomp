@@ -58,6 +58,7 @@ if __name__ == "__main__":
         m = m + 3
         count = count + 1
     
+#    import pdb ; pdb.set_trace()    
     os.chdir(distribution_outdir)
     for key, value in energiesDict.items():
         if key == "interresidues" or key == "intraresidues":
