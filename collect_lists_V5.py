@@ -77,7 +77,8 @@ if __name__ == "__main__":
             new_joined_list = [j for i in new_joined_list for j in i]
             x = [float(i) for i in new_joined_list]
             y = np.array(x)
-            (n, bins) = np.histogram(y, bins = 100, range = (-2 , 2), normed=True)
+#            import pdb ; pdb.set_trace()
+            (n, bins) = np.histogram(y, bins = 100, range = (-10 , 10), normed=True)
             n = n / (sum(n))
             bincentre = 0.5*(bins[1:]+bins[:-1])
             index = np.linspace(1, len(bincentre), num = len(bincentre), dtype = int)
@@ -95,7 +96,7 @@ if __name__ == "__main__":
                     n[i] = bin_addition
             data = np.vstack((index, n)).T
             filename = re.sub('[^0-9]', '', key)
-            filename = ("residue_%s" % (filename))
+            filename = ("residue_%s_%s" % (filename , key))
             np.savetxt(filename, data, fmt=['%d', '%.20f'])
 
 
