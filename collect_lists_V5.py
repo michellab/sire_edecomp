@@ -62,6 +62,31 @@ if __name__ == "__main__":
     def hasNumbers(st_in):
         return any(char.isdigit() for char in st_in)
 
+
+    max_min_list = []
+
+    for key, value in energiesDict.items():
+        if key == "interresidues" or key == "intraresidues":
+            continue
+        elif hasNumbers(key) == False:
+            continue
+        else:
+            new_joined_list = []
+            n = 0
+            while (n < len (some_list)):
+                new_joined_list.append(value[some_list[n]])
+                n = n + 1
+            new_joined_list = [j for i in new_joined_list for j in i]
+            x = [float(i) for i in new_joined_list]
+            max_min_list.append(max(x))
+            max_min_list.append(min(x))
+
+    
+    print ("Max value is: ", max(max_min_list))
+    print ("Min value is: ", min(max_min_list))
+    
+
+
     os.chdir(distribution_outdir)
     for key, value in energiesDict.items():
         if key == "interresidues" or key == "intraresidues":
@@ -78,7 +103,7 @@ if __name__ == "__main__":
             x = [float(i) for i in new_joined_list]
             y = np.array(x)
 #            import pdb ; pdb.set_trace()
-            (n, bins) = np.histogram(y, bins = 100, range = (-10 , 10), normed=True)
+            (n, bins) = np.histogram(y, bins = 100, range = (-20 , 20), normed=True)
             n = n / (sum(n))
             bincentre = 0.5*(bins[1:]+bins[:-1])
             index = np.linspace(1, len(bincentre), num = len(bincentre), dtype = int)
