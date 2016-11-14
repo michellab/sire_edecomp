@@ -85,7 +85,10 @@ if __name__ == "__main__":
     print ("Max value is: ", max(max_min_list))
     print ("Min value is: ", min(max_min_list))
     
+    max_bin = 500.0
+    min_bin = -500.0
 
+    print ("Bin range is from: " + str(min_bin), "to: " + str(max_bin))
 
     os.chdir(distribution_outdir)
     for key, value in energiesDict.items():
@@ -103,7 +106,7 @@ if __name__ == "__main__":
             x = [float(i) for i in new_joined_list]
             y = np.array(x)
 #            import pdb ; pdb.set_trace()
-            (n, bins) = np.histogram(y, bins = 100, range = (-20 , 20), normed=True)
+            (n, bins) = np.histogram(y, bins = 100, range = (min_bin , max_bin), normed=True)
             n = n / (sum(n))
             bincentre = 0.5*(bins[1:]+bins[:-1])
             index = np.linspace(1, len(bincentre), num = len(bincentre), dtype = int)
@@ -128,4 +131,4 @@ if __name__ == "__main__":
     os.chdir('..')
 
 
-# original collect-energies.py does not seem to work with a list in the dictionary, so need to add this here and edit to remove the list from the dictionary and complete the analysis. 
+# original collect-energies.py does not seem to work with the list I've added in the dictionary, so need to add this here and edit to remove the list from the dictionary and complete the analysis. 
