@@ -116,8 +116,8 @@ if __name__ == "__main__":
     print ("Max value is: ", max(max_min_list))
     print ("Min value is: ", min(max_min_list))
     
-    max_bin = 500.0
-    min_bin = -500.0
+    max_bin = 30.0
+    min_bin = -30.0
 
     print ("Using bin range", str(min_bin), "to",str(max_bin), "Type NO if this is not suitable based on max/min values above. Any other key to continue.")
     if input() =="NO":
@@ -159,7 +159,7 @@ if __name__ == "__main__":
             data = np.vstack((index, n)).T
             filename = re.sub('[^0-9]', '', key)
             filename = ("residue_%s_%s" % (filename , key))
-        #    np.savetxt(filename, data, fmt=['%d', '%.20f'])
+            np.savetxt(filename, data, fmt=['%d', '%.20f'])
 
     os.chdir('..')
 
@@ -211,7 +211,7 @@ if __name__ == "__main__":
         Einterres[residue] = ( [ clj_nrg, clj_nrg_dev ], [ coul_nrg, coul_nrg_dev], [ lj_nrg, lj_nrg_dev ] )
 
     orig_stdout = sys.stdout
-    f = open("output.txt", 'w')
+    f = open("output_res_%s.txt" % residue_number , 'w')
     sys.stdout = f   
     print ("#EnergyDecompositionAnalysisforresidue %s (in_kcal/mol)" % residue_number)
     print ("#")
