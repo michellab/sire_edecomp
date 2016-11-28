@@ -1,0 +1,21 @@
+Obtain energy data
+------------------
+process-energies-frames gives folder as energies-x. 
+Then run collect_energies to give data in all_data_residue_x (with dictionary key as filename)
+Use file_move.sh to separate results into different folders for CLJ, LJ and Coulomb
+use file_rename.py to rename all files
+
+
+Run Multiple residues
+---------------------
+make folders OUTPUT/1_all_data and OUTPUT/2_sum_data
+to group residues: Use Run_combine_residue_interactions.sh , which runs Combine_residue_interactions.py for the range of residues selected.
+
+
+Computing KL 
+------------
+script_run_all_KL to compute KL (make a folder to put all these values - edit path in this file)
+collate_KL values then to make a list of KL. Will add a value for the "missing" residue (as there is no energies computed for the residue which is selected)
+
+
+
